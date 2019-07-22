@@ -26,7 +26,8 @@ def sql_table(con):
     
     con.commit()
 
-
+def scrdes():
+    scr3.destroy()
     
 def add_data(con, data):
     cur = con.cursor()
@@ -34,10 +35,16 @@ def add_data(con, data):
     con.commit()
     
 def user_log(con, data):
+    global scr3
+    scr3 = Toplevel(top)
+    scr3.title('Welcome')
     cur =  con.cursor()
     cur.execute('SELECT * FROM members WHERE username == ? and password == ?', data)
-    res = cur.fetchone()[1]
-    Label(scr1, text=res).pack()
+    res = cur.fetchall()
+    for i in res:
+        Label(scr3, text='welocome '+i[1]).pack()
+        Button(scr3, text='ok', command=scrdes, width=10, height=2).pack()
+    
 
 def log():
     con = sql_con('mydata.db')
@@ -46,13 +53,15 @@ def log():
     dataa = (user_info, passw)
     user_log(con ,dataa)
     
+
     
-def dele():
+    
+''' def dele():
     fname_entry.delete(0, END)
     name_entry.delete(0, END)
     tel_entry.delete(0, END)
     user_entry.delete(0, END)
-    pass_entry.delete(0, END)
+    pass_entry.delete(0, END) '''
 
 def reg_data():
     fname_entry_info = firstname.get()
@@ -63,8 +72,8 @@ def reg_data():
     #pass2_entry = password2.get()
     
     if firstname.get()=='' or lastname.get()=='' or phone.get()=='' or username.get()=='' or password1.get() == '':
-        result = tkMessageBox.showwarning('', 'Please Complete The Required Field', icon="warning")
-    
+        #result = tkMessageBox.showwarning('', 'Please Complete The Required Field', icon="warning")
+        Label(scr, text='Please complete the required field', fg='red').pack()
     else:
     
         user_info = (fname_entry_info, lname_entry_info, tel_entry_info, user_entry_info, pass_entry_info)
@@ -77,6 +86,7 @@ def reg_data():
 def login():
     global scr1
     scr1 = Toplevel(top)
+    
     scr1.title('login')
     scr1.geometry('300x300')
     global username
